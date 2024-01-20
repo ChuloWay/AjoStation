@@ -15,7 +15,7 @@ model User {
   firstName     String
   lastName      String
   email         String    @unique
-  phoneNumber   Int
+  phoneNumber   String    @unique
   pin           String
   password      String
   account       Account?   
