@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(uuid())
+  firstName     String
+  lastName      String
+  email         String    @unique
+  phoneNumber   Int
+  pin           String
+  password      String
+  account       Account?   
+  accountId     String?    @unique
+  enrollments   Enrollment[]
+  payments      Payment[]
+  fees          Fee[]
+
+  @@index([id], name: "idx_user_id")
+  @@index([email], name: "idx_user_email")
+  @@index([phoneNumber], name: "idx_user_phoneNumber")
+  @@index([accountId], name: "idx_user_accountId")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Account {
+  id       String    @id @default(uuid())
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String    @unique
+  balance  Float
+
+  @@index([id], name: "idx_account_id")
+  @@index([userId], name: "idx_account_userId")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Scheme {
+  id            String    @id @default(uuid())
+  schemeName    String
+  interestRate  Float
+  maturityDate  DateTime
+  enrollments   Enrollment[]
+
+  @@index([id], name: "idx_scheme_id")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Enrollment {
+  id              String    @id @default(uuid())
+  user            User      @relation(fields: [userId], references: [id])
+  userId          String
+  scheme          Scheme    @relation(fields: [schemeId], references: [id])
+  schemeId        String
+  enrollmentDate  DateTime
+
+  @@index([id], name: "idx_enrollment_id")
+  @@index([userId], name: "idx_enrollment_userId")
+  @@index([schemeId], name: "idx_enrollment_schemeId")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Payment {
+  id            String    @id @default(uuid())
+  user          User      @relation(fields: [userId], references: [id])
+  userId        String
+  amount        Float
+  paymentDate   DateTime
+  paymentMethod String
+
+  @@index([id], name: "idx_payment_id")
+  @@index([userId], name: "idx_payment_userId")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Fee {
+  id      String    @id @default(uuid())
+  user    User      @relation(fields: [userId], references: [id])
+  userId  String
+  feeType String
+  amount  Float
+  feeDate DateTime
+
+  @@index([id], name: "idx_fee_id")
+  @@index([userId], name: "idx_fee_userId")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
