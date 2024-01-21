@@ -9,7 +9,6 @@ export class AuthService {
   async createUser(createUserDTO: CreateUserDto) {
     const { email } = createUserDTO;
 
-    // Check if the user with this email exists
     const checkEmail = await this.userService.findOneByEmail(email);
     if (checkEmail) {
       throw new HttpException(
