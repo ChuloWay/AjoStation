@@ -55,12 +55,6 @@ export class AuthService {
       loginUserDTO.password,
       user.password,
     );
-    console.log(
-      'data for password here',
-      loginUserDTO.password,
-      user.password,
-      isValid,
-    );
     if (!isValid) {
       throw new UnauthorizedException('Invalid credentials');
     }

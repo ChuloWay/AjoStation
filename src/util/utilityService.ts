@@ -24,7 +24,6 @@ export class UtilityService {
     try {
       return await compareSync(newPassword, passwordHash);
     } catch (error) {
-      console.log(error);
       return false;
     }
   }

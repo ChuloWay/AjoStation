@@ -63,7 +63,6 @@ export class UserService {
       delete newUser.pin;
       return newUser;
     } catch (error) {
-      console.error('Error creating user and account:', error);
       throw error;
     }
   }
