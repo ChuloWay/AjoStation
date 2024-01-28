@@ -11,6 +11,8 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDTO } from './dto/login-auth.dto';
+import { ForgotPasswordDTO } from './dto/forgot-password.dto';
+import { ResetPasswordDTO } from './dto/reset-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -44,6 +46,40 @@ export class AuthController {
         'Reason: ' + error.message,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  @Post('/forgot-password')
+  async forgotPassword(
+    @Res() res,
+    @Body() body: ForgotPasswordDTO,
+    @Next() next,
+  ) {
+    try {
+      await this.authService.forgotPassword(body);
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: 'success',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  @Post('/reset-password')
+  async resetPassword(
+    @Res() res,
+    @Body() body: ResetPasswordDTO,
+    @Next() next,
+  ) {
+    try {
+      await this.authService.resetPassword(body);
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: 'success',
+      });
+    } catch (error) {
+      next(error);
     }
   }
 }
