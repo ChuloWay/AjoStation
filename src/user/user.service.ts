@@ -66,4 +66,24 @@ export class UserService {
       throw error;
     }
   }
+
+  public async getProfile(userId: string): Promise<User | undefined> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        account: true,
+      },
+    });
+
+    if (user) {
+      delete user.password;
+      delete user.account?.createdAt;
+      delete user.account?.updatedAt;
+      delete user.accountId;
+      delete user.createdAt;
+      delete user.updatedAt;
+    }
+
+    return user;
+  }
 }
