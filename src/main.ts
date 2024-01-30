@@ -10,7 +10,7 @@ async function bootstrap() {
   // Validation
   app.useGlobalPipes(new ValidationPipe());
 
-  app.use(morgan('tiny'));
+  app.use(morgan('dev'));
   app.setGlobalPrefix('api/v1');
 
   // enable shutdown hook
