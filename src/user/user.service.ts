@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { PrismaService } from 'src/prisma.service';
 import { User } from '@prisma/client';
-import { UtilityService } from 'src/util/utilityService';
+import { UtilityService } from '../util/utilityService';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
@@ -27,6 +27,11 @@ export class UserService {
     return await this.prisma.user.findMany();
   }
 
+  /**
+   * Creates a new user.
+   * @param createUserDto - The DTO containing user data to create.
+   * @returns A promise that resolves to the created user or null if creation fails.
+   */
   public async create(createUserDto: CreateUserDto): Promise<User | null> {
     const hashedPassword = await this.utilityService.hashPassword(
       createUserDto.password,
@@ -67,6 +72,11 @@ export class UserService {
     }
   }
 
+  /**
+   * Retrieves the profile of a user, excluding sensitive information.
+   * @param userId - The ID of the user whose profile to retrieve.
+   * @returns A promise that resolves to the user's profile or undefined if not found.
+   */
   public async getProfile(userId: string): Promise<User | undefined> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -87,6 +97,12 @@ export class UserService {
     return user;
   }
 
+  /**
+   * Updates a user's password.
+   * @param userId - The ID of the user whose password to update.
+   * @param newPassword - The new password to set.
+   * @returns A promise that resolves to the updated user.
+   */
   public async updatePassword(userId: string, newPassword: string) {
     const hashedPassword = await this.utilityService.hashPassword(newPassword);
     return await this.prisma.user.update({

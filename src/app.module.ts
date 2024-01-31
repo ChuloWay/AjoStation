@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-yet';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { redisStore } from 'cache-manager-redis-yet';
     }),
     UserModule,
     AuthModule,
+    PrismaModule,
     CacheModule.registerAsync({
       useFactory: async () => ({
         store: await redisStore({
