@@ -27,6 +27,12 @@ export class AuthService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
+  /**
+   * Creates a new user.
+   * @param createUserDTO - The DTO containing user data to create.
+   * @returns A promise that resolves to the created user.
+   * @throws An HttpException if the email or phone number already exists.
+   */
   async createUser(createUserDTO: CreateUserDto) {
     const { email, phoneNumber } = createUserDTO;
 
@@ -50,6 +56,13 @@ export class AuthService {
     return await this.userService.create(createUserDTO);
   }
 
+  /**
+   * Logs in a user.
+   * @param loginUserDTO - The DTO containing login credentials.
+   * @returns A promise that resolves to an object containing the user and authentication token.
+   * @throws A NotFoundException if the email is not found.
+   * @throws An UnauthorizedException if the password is invalid.
+   */
   async login(loginUserDTO: LoginUserDTO) {
     // Get user information
     const user = await this.userService.findOneByEmail(loginUserDTO.email);
@@ -89,6 +102,13 @@ export class AuthService {
     Logger.log('token here', resetToken);
   }
 
+  /**
+   * Resets the user's password using the reset token.
+   * @param resetPasswordDTO - The DTO containing the reset token and new password.
+   * @returns A promise that resolves once the password is reset.
+   * @throws An HttpException if the reset token is invalid or expired.
+   * @throws A NotFoundException if the user associated with the email is not found.
+   */
   public async resetPassword(
     resetPasswordDTO: ResetPasswordDTO,
   ): Promise<void> {
@@ -111,7 +131,6 @@ export class AuthService {
 
     await this.userService.updatePassword(user.id, newPassword);
 
-    // Clear the reset token from the cache after use
     await this.cacheManager.del(key);
   }
 }
