@@ -18,10 +18,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-       - name: Set DATABASE_URL
-         env:
+      - name: Set DATABASE_URL
+        env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v2
         with:
